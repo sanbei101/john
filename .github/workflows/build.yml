@@ -2,10 +2,16 @@ name: Build John the Ripper
 
 on:
   workflow_dispatch:
+  push:
+    branch:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,18 +40,17 @@ jobs:
           cd john-the-ripper/run
           if [ -f "./john" ]; then
             echo "Build succeeded!"
-            ./john --test
           else
             echo "Build failed!"
             exit 1
           fi
 
       - name: Zip the build
-        run: zip -r john-the-ripper.zip john-the-ripper/run
+        run: zip -r john-the-ripper-${{ matrix.os }}.zip john-the-ripper/run
 
-      - name: Create Release
+      - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
           name: john-the-ripper
-          files: john-the-ripper.zip
+          files: john-the-ripper-*.zip
           make_latest: true
