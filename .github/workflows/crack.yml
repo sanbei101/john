@@ -10,13 +10,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: download file
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download john --pattern 'john-the-ripper-ubuntu-24.04.zip'
-          gh release download archive --pattern 'target.zip'
+          gh release download crack --pattern 'target.zip'
           unzip john-the-ripper-ubuntu-24.04.zip -d john-the-ripper
 
       - name: extract archive hash
