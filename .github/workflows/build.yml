@@ -54,6 +54,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: john-the-ripper
-          tag_name: ${{ github.sha }}
+          tag_name: latest
           files: john-the-ripper-*.zip
           make_latest: true
