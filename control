@@ -1,8 +1,0 @@
-Package: john-the-ripper-jumbo
-Version: 1.9.0-jumbo-custom
-Architecture: amd64
-Maintainer: sanbei101 <sanbei101@outlook.com>
-Depends: libc6, libssl-dev, libgmp-dev
-Description: John the Ripper password cracker (bleeding-jumbo)
- This is a custom package of the bleeding-jumbo version of John the Ripper.
- Files are installed in /opt/john.

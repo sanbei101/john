@@ -1,0 +1,57 @@
+name: Crack Zip Password
+
+on:
+  workflow_dispatch:
+
+jobs:
+  crack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120 #调整最长运行时间(min)
+    steps:
+      - name: download john-ripper
+        run: |
+          gh release download john --pattern 'john-the-ripper-ubuntu-24.04.zip'
+          unzip john-the-ripper-ubuntu-24.04.zip -d john-the-ripper
+
+        #把需要破解的压缩包上传到release的`archive` tag下
+      - name: download target file
+        run: |
+          gh release download archive --pattern 'target.zip'
+
+      - name: extract archive hash
+        run: |
+          john-the-ripper/run/zip2john target.zip > hash.txt
+
+      - name: crack password and monitor progress
+        run: |
+          # 定义 session 名称方便管理
+          SESSION_NAME="crack_target"
+          
+          # 定义最长破解时间为 2 小时 (2 * 3600 = 7200 秒)
+          MAX_RUNTIME_SECONDS=7200
+          
+          echo "开始破解，最长持续时间 ${MAX_RUNTIME_SECONDS} 秒..."
+          
+          # 使用 --max-run-time 限制 john 的最大运行时间，并使用 & 将其放入后台运行
+          john-the-ripper/run/john --incremental --session=$SESSION_NAME --max-run-time=$MAX_RUNTIME_SECONDS hash.txt &
+          
+          # 获取后台 john 进程的 PID
+          john_pid=$!
+          
+          # 循环监控，直到 john 进程结束（无论是破解成功、穷尽字典还是达到时间限制）
+          # kill -0 $pid 的作用是检查进程是否存在，如果存在则返回0，不存在则返回非0
+          # 2>/dev/null 是为了在进程不存在时不输出错误信息
+          while kill -0 $john_pid 2>/dev/null; do
+            echo "--------------------------------"
+            # 使用 --status 显示当前进度
+            john-the-ripper/run/john --status=$SESSION_NAME
+            # 等待 2 秒
+            sleep 2
+          done
+          
+          echo "--------------------------------"
+          echo "破解进程已结束。正在显示最终结果..."
+          
+          # 最终显示破解结果
+          # 如果成功，会显示密码；如果失败，会提示 "No password hashes loaded"
+          john-the-ripper/run/john --show --session=$SESSION_NAME hash.txt

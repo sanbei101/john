@@ -1,7 +1,0 @@
-#!/bin/sh
-set -e
-
-# 创建一个符号链接，这样就可以直接运行 'john' 命令了
-ln -sf /opt/john-the-ripper/john /usr/local/bin/john
-
-exit 0
