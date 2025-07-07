@@ -17,7 +17,7 @@ jobs:
         run: |
           gh release download john --pattern 'john-the-ripper-ubuntu-24.04.zip'
           gh release download crack --pattern 'target.zip'
-          unzip john-the-ripper-ubuntu-24.04.zip -d john-the-ripper
+          unzip john-the-ripper-ubuntu-24.04.zip
 
       - name: extract archive hash
         run: |
