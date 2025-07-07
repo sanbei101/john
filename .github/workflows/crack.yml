@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120 #调整最长运行时间(min)
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       - name: download file
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
