@@ -3,11 +3,13 @@ name: Build John the Ripper
 on:
   workflow_dispatch:
   push:
-    branch:
+    branches:
       - main
 
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
