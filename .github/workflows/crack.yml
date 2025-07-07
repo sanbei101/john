@@ -8,15 +8,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 120 #调整最长运行时间(min)
     steps:
-      - name: download john-ripper
+      - name: download file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download john --pattern 'john-the-ripper-ubuntu-24.04.zip'
-          unzip john-the-ripper-ubuntu-24.04.zip -d john-the-ripper
-
-        #把需要破解的压缩包上传到release的`archive` tag下
-      - name: download target file
-        run: |
           gh release download archive --pattern 'target.zip'
+          unzip john-the-ripper-ubuntu-24.04.zip -d john-the-ripper
 
       - name: extract archive hash
         run: |
